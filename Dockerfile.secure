@@ -1,0 +1,14 @@
+FROM eclipse-mosquitto:1.4.10
+MAINTAINER Collin Dever <dever.cj@gmail.com>
+
+EXPOSE 8883
+ADD mosquitto.conf /mosquitto/config/mosquitto.conf
+ADD ca.crt /etc/mosquitto/conf.d//#CA CERT#
+ADD server.key /etc/mosquitto/conf.d//#SERVER KEY#
+ADD server.pem /etc/mosquitto/conf.d//#SERVER CERT#
+
+RUN touch /mosquitto/passwd
+RUN mosquitto_passwd -b /mosquitto/passwd #USERNAME# #PASSWORD#
+RUN mosquitto_passwd -b /mosquitto/passwd #USERNAME# #PASSWORD#
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["/usr/sbin/mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
